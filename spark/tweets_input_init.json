@@ -1,0 +1,21 @@
+[{
+    "tweet_id" : 1208309744324292609,
+    "init" : "Please come and patronise my market, edakun 😢\nI have human hairs and handmade footwear for sale\nYou can go through… https://t.co/QqB5AolTXb",
+    "entities" : {
+        "hashtags" : [],
+        "urls" : [ 
+            {
+                "url" : "https://t.co/QqB5AolTXb",
+                "expanded_url" : "https://twitter.com/i/web/status/1208309744324292609",
+                "display_url" : "twitter.com/i/web/status/1…",
+                "indices" : [ 
+                    116, 
+                    139
+                ]
+            }
+        ],
+        "user_mentions" : [],
+        "symbols" : []
+    },
+    "created_at" : "Sat Dec 21 08:54:27 +0000 2019"
+}]

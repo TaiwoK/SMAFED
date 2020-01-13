@@ -1,0 +1,35 @@
+<div style="padding: 0 10px;">
+    <h3 class="p-4">Events</h3>
+    <div *ngIf="isLoading">Loading...</div>
+    <div *ngIf="eventListPage && !isLoading" style="min-width: 800px;">
+        <table class="table table-bordered" width="100%">
+            <tr>
+                <th class="text-center" width="80px">ID</th>
+                <th class="text-center">Tweets</th>
+                <th class="text-center" width="60px">Amount of Tweets</th>
+                <th class="text-center" width="210px">Word Cloud</th>
+            </tr>
+            <tr *ngIf="eventListPage.content.length === 0">
+                <td class="text-center" colspan="4">There are no content to display</td>
+            </tr>
+            <tr *ngFor="let event of eventListPage.content">
+                <td class="text-center" [title]="event.score.toFixed(4)"><a [routerLink]="['/', 'events', event.cluster]">{{event.cluster}}</a></td>
+                <td>
+                    <table width="100%">
+                        <tr *ngFor="let tweet of event.tweets">
+                            <td><div style="white-space: pre-line;">{{tweet.init}}<a href="https://twitter.com/i/web/status/{{tweet.tweet_id}}">&#xd83d;&#xdc26;</a></div></td>
+                            <td width="160px">{{tweet.created_at.toGMTString()}}</td>
+                        </tr>
+                    </table>
+                </td>
+                <td class="text-center">{{event.amount_of_tweets}}</td>
+                <td class="text-center">
+                    <a href="/api/events/{{event.cluster}}-cloud.png?t={{time}}" download>
+                        <img src="/api/events/{{event.cluster}}-cloud.png?t={{time}}" width="200" style="padding: 5px">
+                    </a>
+                </td>
+            </tr>
+        </table>
+        <app-pagination [page]="eventListPage" (pageSelected)="onPageSelected($event)"></app-pagination>
+    </div>
+</div>

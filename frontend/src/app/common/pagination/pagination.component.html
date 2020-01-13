@@ -1,0 +1,28 @@
+<nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-center">
+        <li class="page-item" [class.disabled]="page.first">
+            <a class="page-link" (click)="selectPage(0)">First</a>
+        </li>
+        <li class="page-item" [class.disabled]="page.first">
+            <a class="page-link" (click)="prevPage()">Previous</a>
+        </li>
+        <li class="page-item" [class.active]="p === page.number" *ngFor="let p of availablePages">
+            <a class="page-link" tabindex="-1" (click)="selectPage(p)">{{p + 1}}</a>
+        </li>
+        <li class="page-item" [class.disabled]="page.last">
+            <a class="page-link" (click)="nextPage()">Next</a>
+        </li>
+        <li class="page-item" [class.disabled]="page.last">
+            <a class="page-link" (click)="selectPage(page.totalPages - 1)">Last ({{page.totalPages}})</a>
+        </li>
+    </ul>
+</nav>
+
+<style>
+    .page-item {
+        cursor: pointer;
+    }
+    .page-item.disabled {
+        cursor: not-allowed;
+    }
+</style>

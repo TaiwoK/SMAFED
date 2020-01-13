@@ -1,0 +1,41 @@
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div *ngIf="slang">
+                <h3 class="p-4"><a [routerLink]="['/', 'ikb']">IKB</a> / <b>{{slang.word}}</b></h3>
+
+                <div class="card m-4" *ngFor="let dict of slang.ikb.payload | keyvalue">
+                    <div class="card-header">{{dict.key}}</div>
+                    <div class="card-body">
+                        <div class="card m-4" *ngFor="let dictDefinition of dict.value">
+                            <div class="card m-2">
+                                <div class="card-header">Definition</div>
+                                <div class="card-body">
+                                    <ul class="list-group">
+                                        <li class="list-group-item" *ngFor="let d of dictDefinition.definition">{{d}}</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="card m-2">
+                                <div class="card-header">Usage</div>
+                                <div class="card-body">
+                                    <ul class="list-group">
+                                        <li class="list-group-item" *ngFor="let u of dictDefinition.usage">{{u}}</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="card m-2">
+                                <div class="card-header">Related Term</div>
+                                <div class="card-body">
+                                    <ul class="list-group">
+                                        <li class="list-group-item" *ngFor="let rt of dictDefinition.related_term">{{rt}}</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

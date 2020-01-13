@@ -1,0 +1,40 @@
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="p-4" style="display: flex;justify-content: space-between;">
+                <h3>
+                    IKB
+                </h3>
+                <div class="w-50">
+                    <input type="text" class="form-control" name="search" [ngModel]="search" (ngModelChange)="onSearchChanged($event)" placeholder="Search">
+                </div>
+            </div>
+
+            <div *ngIf="isLoading">Loading...</div>
+            <div *ngIf="slangListPage && !isLoading">
+                <div style="justify-content: center;display: flex;flex-flow: row wrap;width: 100%;">
+                    <div *ngIf="slangListPage.content.length === 0">There are no content to display</div>
+                    <div *ngFor="let slang of slangListPage.content"
+                         class="card m-2"
+                         style="width: 340px;height: 240px;">
+                        <div class="card-header">
+                            <b>{{slang.word}}</b>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text" *ngIf="slang.short_definition">
+                                <b>From: {{slang.dictionary_title}}</b><br>
+                                {{slang.short_definition}}
+                            </p>
+                            <p class="card-text" *ngIf="!slang.short_definition"><span class="text-secondary">There is no definition in IKB.</span>
+                            </p>
+                        </div>
+                        <div class="card-footer">
+                            <a [routerLink]="['/', 'ikb', slang._id]" class="btn btn-primary">View Slang</a>
+                        </div>
+                    </div>
+                </div>
+                <app-pagination [page]="slangListPage" (pageSelected)="onPageSelected($event)"></app-pagination>
+            </div>
+        </div>
+    </div>
+</div>

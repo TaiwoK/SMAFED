@@ -1,0 +1,26 @@
+[{
+    "cluster" : 0,
+    "score" : 16.8710984047515,
+    "words" : {
+        "go" : 1.0,
+        "love" : 1.0,
+        "please" : 0.5,
+        "patronise" : 0.5,
+        "market" : 0.5,
+        "median" : 0.5,
+        "human" : 0.5,
+        "hair" : 0.5,
+        "handmade" : 0.5,
+        "footwear" : 0.5,
+        "happy" : 0.5,
+        "wedding" : 0.5,
+        "anniversary" : 0.5,
+        "mummy" : 0.5,
+        "daddy" : 0.5,
+        "arabi" : 0.5,
+        "may" : 0.5,
+        "happiness" : 0.5,
+        "flourish" : 0.5,
+        "day" : 0.5
+    }
+}]

@@ -1,0 +1,110 @@
+version: '3.2'
+
+services:
+  event-detector-twitter:
+    build: twitter/
+    container_name: event-detector-twitter
+    restart: always
+    environment:
+      - ACCESS_TOKEN=1199269022447083521-dCaymemHHDkjdsH3OmFcEKAHB9ZB8f
+      - ACCESS_SECRET=riDYzKMcOQO7Pk4uKTEqMMfuv7XOTPzqNuoWdSZOSsA9j
+      - CONSUMER_KEY=4chOZNmrrnejWEgOuiXLpbbSR
+      - CONSUMER_SECRET=IgX0Sg7h2Jq5FBN257D74kYAP2UoWDi5pm49x3Oh0hpL3HmkHx
+      - PORT=9009
+      - HOST_NAME=event-detector-twitter
+    ports:
+      - 9009
+    networks:
+      - event-detection-net
+
+  event-detector-mongo:
+    container_name: event-detector-mongo
+    image: mongo
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./data/mongodb/db:/data/db
+    networks:
+      - event-detection-net
+
+  event-detector-rest-api:
+    build: rest-api/
+    container_name: event-detector-rest-api
+    restart: always
+    environment:
+      - MONGO_HOST=event-detector-mongo
+      - MONGO_PORT=27017
+      - MONGO_DATABASE=event_detection_db
+    ports:
+      - "5001:80"
+    depends_on:
+      - event-detector-mongo
+    networks:
+      - event-detection-net
+
+  event-detector-frontend:
+    build: frontend/
+    container_name: event-detector-frontend
+    restart: always
+    environment:
+      - VIRTUAL_HOST=smafed.com
+      - VIRTUAL_PORT=80
+      - LETSENCRYPT_HOST=smafed.com
+      - LETSENCRYPT_EMAIL=osi400lful@gmail.com
+    ports:
+      - "80:80"
+    depends_on:
+      - event-detector-rest-api
+    networks:
+      - event-detection-net
+
+  spark-app:
+    build: spark/
+    container_name: event-detector-spark
+    restart: always
+    environment:
+      - TWITTER_PORT=9009
+      - DATABASE_PORT=27017
+      - HOST_NAME_TWITTER=event-detector-twitter
+      - HOST_NAME_DATABASE=event-detector-mongo
+      - DATABASE_NAME=event_detection_db
+      - INPUT_TWEETS_COLLECTION_NAME=tweets_input
+      - IKB_COLLECTION_NAME=IKB
+      - PROCESSED_TWEET_COLLECTION_NAME=tweets_processed
+      - CLUSTER_COLLECTION_NAME=cluster
+      - USED_SLANG_COLLECTION_NAME=used_slang
+    depends_on:
+      - event-detector-twitter
+      - event-detector-mongo
+    networks:
+      - event-detection-net
+
+  event-detector-app:
+    build: .
+    container_name: event-detector-app
+    restart: always
+    environment:
+      - DATABASE_NAME=event_detection_db
+      - DATABASE_HOST=event-detector-mongo
+      - DATABASE_PORT=27017
+      - INPUT_TWEETS_COLLECTION_NAME=tweets_input
+      - IKB_COLLECTION_NAME=IKB
+      - PROCESSED_TWEETS_COLLECTION_NAME=tweets_processed
+      - CLUSTER_COLLECTION_NAME=cluster
+      - USED_SLANG_COLLECTION_NAME=used_slang
+      - NUM_OF_TOKENS=5
+      - SHR_MIN=0.9
+      - SHR_THRESHOLD=0.25
+      - URL_FOR_SENTTOVEC_MODEL=https://freefly19.ams3.digitaloceanspaces.com/smafed/torontobooks_unigrams.bin
+      - URL_FOR_SPELLCHECKER_MODEL=https://freefly19.ams3.digitaloceanspaces.com/smafed/en.bin
+    depends_on:
+      - event-detector-mongo
+    volumes:
+      - ./data_smafed:/app/data_smafed
+    networks:
+      - event-detection-net
+
+networks:
+  event-detection-net:
+    driver: bridge

@@ -1,0 +1,81 @@
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div *ngIf="event">
+                <div class="row">
+                    <div class="col-md-7 col-lg-8">
+                        <h3 class="p-4"><a [routerLink]="['/', 'events']">Events</a> / #{{event.cluster}}</h3>
+                        <div class="text-center p-2">
+                            <a href="/api/events/{{event.cluster}}-cloud.png?t={{time}}" download>
+                                <img src="/api/events/{{event.cluster}}-cloud.png?t={{time}}">
+                            </a>
+                        </div>
+                        <div>
+                            Event formed: <b>{{event.cluster_creating_time.toGMTString()}}</b>
+                        </div>
+                        <div>
+                            Amount of tweets: <b>{{tweetListPage?.total}}</b>
+                        </div>
+                        <div>
+                            Event Score: <b>{{event.score.toFixed(4)}}</b>
+                        </div>
+                    </div>
+                    <div class="col-md-5 col-lg-4">
+                        <ul class="list-group pt-4">
+                            <li class="list-group-item list-group-item-primary">
+                                <div style="display: flex;justify-content: space-between;">
+                                    <div>Word</div>
+                                    <div>Frequency</div>
+                                </div>
+                            </li>
+                            <li class="list-group-item" *ngFor="let wordItem of event.words"
+                                style="padding-top: 0.25rem;padding-bottom: 0.25rem;">
+                                <div style="display: flex;justify-content: space-between;">
+                                    <div>{{wordItem.word}}</div>
+                                    <div>{{wordItem.score.toFixed(4)}}</div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div *ngIf="tweetListPage">
+                <h4 class="p-3">Event Tweets</h4>
+                <table class="table table-bordered">
+                    <tr>
+                        <th>Tweet</th>
+                        <th>Date</th>
+                    </tr>
+                    <tr *ngFor="let tweet of tweetListPage.content">
+                        <td>
+                            <div class="card mb-2">
+                                <div class="card-header">Original</div>
+                                <div class="card-body">
+                                    <div style="white-space: pre-line;">
+                                        {{tweet.init}}
+                                        <a href="https://twitter.com/i/web/status/{{tweet.tweet_id}}">&#xd83d;&#xdc26;</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card">
+                                <div class="card-header">Enriched</div>
+                                <div class="card-body">
+                                    <div style="white-space: pre-line;">
+                                        {{tweet.enriched_tweet}}
+                                        <a href="https://twitter.com/i/web/status/{{tweet.tweet_id}}">&#xd83d;&#xdc26;</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </td>
+                        <td width="160px">{{tweet.created_at.toGMTString()}}</td>
+                    </tr>
+                </table>
+
+                <app-pagination [page]="tweetListPage" (pageSelected)="onPageSelected($event)"></app-pagination>
+            </div>
+        </div>
+    </div>
+</div>
