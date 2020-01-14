@@ -1,13 +1,6 @@
-## To set SSH connection on Windows you need to run next commands in command line:
+# Enter the server with ssh command:
 ```
-cd [path_to_key_files]
-mkdir %HOMEDRIVE%%HOMEPATH%\.ssh 
-type ssh_key.pub >> %HOMEDRIVE%%HOMEPATH%\.ssh\id_rsa.pub
-type ssh_key >> %HOMEDRIVE%%HOMEPATH%\.ssh\id_rsa
-```
-## Enter the server with ssh command:
-```
-ssh root@smafed.com
+ssh -i path/to/file/with/private/key root@smafed.com
 ```
 ## To run multi-container application with configuration described in `docker-compose-prod.yml` file:
 ```
