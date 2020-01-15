@@ -2,6 +2,10 @@
 ```
 ssh -i path/to/file/with/private/key root@smafed.com
 ```
+## Go to the folder with application:
+```
+cd event-detection-app
+```
 ## To run multi-container application with configuration described in `docker-compose-prod.yml` file:
 ```
 cd event-detection-app
@@ -22,6 +26,7 @@ docker-compose -f docker-compose-prod.yml up -d
       - SHR_THRESHOLD
 ##### To edit ```docker-compose-prod.yml``` file you can use ubuntu nano editor in the next way:
 ```
+docker-compose -f docker-compose-prod.yml down
 nano docker-compose-prod.yml
 ```
 ### After any changing in ```docker-compose-prod.yml``` or in the scripts you MUST run multi-container application with rebuilding:
