@@ -9,7 +9,7 @@ class TweetTransformer(Cleaner):
     Class for tweets transformation.
     """
 
-    def __init__(self, sentences, entities, num_of_tokens):
+    def __init__(self, sentences, num_of_tokens, entities=None):
         """
         :param sentences: sentences to cleaning (tweets).
         :param entities: entities in this sentences.

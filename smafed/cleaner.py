@@ -6,7 +6,7 @@ class Cleaner:
     Class for data cleaning.
     """
 
-    def __init__(self, sentences, entities):
+    def __init__(self, sentences, entities=None):
         """
         :param  sentences: sentences to cleaning.
         :param entities: entities in this sentences.
@@ -30,7 +30,8 @@ class Cleaner:
         - remove punctuation;
         - remove repeating characters.
         """
-        self.sentences = self.entities_replacement()
+        if self.sentences_entities is not None:
+            self.sentences = self.entities_replacement()
         self.sentences = self.punctuation_remove()
         self.sentences = self.repeating_characters_remove()
 

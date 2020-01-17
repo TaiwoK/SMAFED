@@ -3,6 +3,7 @@ import re
 
 from nltk.corpus import wordnet
 from sklearn.metrics.pairwise import cosine_similarity
+from smafed.tweet_transformer import TweetTransformer
 
 
 class EnrichmentLayer:
@@ -14,8 +15,7 @@ class EnrichmentLayer:
     """
 
     def __init__(self, model=None, database=None, collection_of_slangs=None, collection_processed=None,
-                 collection_used_slang=None,
-                 spell_correct=None):
+                 collection_used_slang=None, spell_correct=None, num_of_tokens=None):
         self.model = model
         """sent2vec model instance"""
         self.database = database
@@ -28,6 +28,8 @@ class EnrichmentLayer:
         """name of collection with used slangs"""
         self.spell_correct = spell_correct
         """spell corrector instance"""
+        self.num_of_tokens = num_of_tokens
+        """minimum number of tokens in sentence"""
 
     @staticmethod
     def extract_def_use(elements):
@@ -143,6 +145,9 @@ class EnrichmentLayer:
         enriched_tweet = ' '.join(text)
         enriched_tweet = self.spell_correction(enriched_tweet)
         tweet['enriched_tweet'], tweet['used_slang_ids'] = enriched_tweet, used_slang_ids
+        cleaner = TweetTransformer([tweet['enriched_tweet']], self.num_of_tokens)
+        cleaner.preprocess()
+        tweet['enriched_tweet'] = cleaner.sentences[0]
         tweet.pop('cleaned')
         if not self.database.get(self.collection_processed, "enriched_tweet", tweet['enriched_tweet']).count() > 0:
             self.database.insert(self.collection_processed, tweet)

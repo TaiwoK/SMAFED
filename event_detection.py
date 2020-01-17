@@ -65,7 +65,7 @@ def pipeline():
     tweets_df = load_data_from_db(dbworker, INPUT_TWEETS_COLLECTION_NAME)
     if tweets_df.shape[0]:
         # Cleaning
-        cleaner = TweetTransformer(tweets_df['init'], tweets_df['entities'], NUM_OF_TOKENS)
+        cleaner = TweetTransformer(tweets_df['init'], NUM_OF_TOKENS, tweets_df['entities'])
         cleaner.preprocess()
 
         array_of_dicts = collect_data_for_enriched(tweets_df, cleaner.sentences)
@@ -74,7 +74,7 @@ def pipeline():
             model = Sent2VecWrapper(os.path.join(PATH, "data_smafed", "sent2vec_model.bin"))
             spell_correction_model = SpellCheckerWrapper(os.path.join(PATH, "data_smafed", "spellcorrection_model.bin"))
             enrichment = EnrichmentLayer(model, dbworker, IKB_COLLECTION_NAME, PROCESSED_TWEETS_COLLECTION_NAME,
-                                         USED_SLANG_COLLECTION_NAME, spell_correction_model)
+                                         USED_SLANG_COLLECTION_NAME, spell_correction_model, NUM_OF_TOKENS)
             dict_from_enriched = enrichment.tweets_enrichment(array_of_dicts)
 
             if dict_from_enriched != {}:
