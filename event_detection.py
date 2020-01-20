@@ -42,6 +42,7 @@ URL_FOR_SPELLCHECKER_MODEL = os.getenv("URL_FOR_SPELLCHECKER_MODEL",
 NUM_OF_TOKENS = int(os.getenv("NUM_OF_TOKENS", 5))
 SHR_MIN = float(os.getenv("SHR_MIN", 0.9))
 SHR_THRESHOLD = float(os.getenv("SHR_THRESHOLD", 0.25))
+HISTOGRAM_RATIO_COEFFICIENT = float(os.getenv("HISTOGRAM_RATIO_COEFFICIENT", 1))
 
 PATH = os.path.dirname(os.path.abspath(__file__))
 
@@ -84,7 +85,8 @@ def pipeline():
                 # Clusterisation
                 clusterization = SemanticHistogramClusterization(os.path.join(PATH, "data_smafed", "cluster"),
                                                                  shr_min=SHR_MIN,
-                                                                 shr_threshold=SHR_THRESHOLD)
+                                                                 shr_threshold=SHR_THRESHOLD,
+                                                                 histogram_ratio_coefficient=HISTOGRAM_RATIO_COEFFICIENT)
                 clusterization.clustering_elements(vectors)
 
                 # Extract clusters number in relation with tweets

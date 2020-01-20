@@ -41,7 +41,7 @@ docker run -p 27017:27017 --name mongo -v /root/event-detection-app/data/mongodb
 ```
 ##### Open another command line window and copy the new database file to the server
 ```
-scp /path/to/new/IKB/on/your/computer/<NEW_IKB_filename> root@smafed.com:/root/event-detection-app
+scp -i path/to/file/with/private/key /path/to/new/IKB/on/your/computer/<NEW_IKB_filename> root@smafed.com:/root/event-detection-app
 ```
 ##### Return to the previous command line window when download will be completed and enter the Mongo shell inside the docker container:
 ```
@@ -80,7 +80,40 @@ exit
 mongoimport --db event_detection_db --collection IKB <NEW_IKB filename>
 exit
 ```
-#### In both cases in the end you have to run multi-container application again:
+#### In both cases in the end you have to stop mongodb and run multi-container application:
 ```
+docker stop mongo
+docker rm mongo
+docker-compose -f docker-compose-prod.yml up -d
+```
+## To delete all clusters you need to do the following commands
+##### Stop multi-container application and run only mongodb
+```
+docker-compose -f docker-compose-prod.yml down
+docker run -p 27017:27017 --name mongo -v /root/event-detection-app/data/mongodb/db:/data/db -d mongo
+```
+##### Enter the Mongo shell inside the docker container:
+```
+docker exec -it mongo bash
+mongo
+```
+##### Fully remove old database(all information about old clusters, tweets and slang words):
+```
+use event_detection_db
+db.tweets_input.remove({})
+db.tweets_processed.remove({})
+db.cluster.remove({})
+db.used_slang.remove({})
+exit
+exit
+```
+##### Clean up old cluster`s staff:
+```
+sudo rm -rf /root/event-detection-app/data_smafed/cluster
+```
+#### In the end you have to stop mongodb and run multi-container application:
+```
+docker stop mongo
+docker rm mongo
 docker-compose -f docker-compose-prod.yml up -d
 ```

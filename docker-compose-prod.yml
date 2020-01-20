@@ -96,12 +96,13 @@ services:
       - NUM_OF_TOKENS=5
       - SHR_MIN=0.9
       - SHR_THRESHOLD=0.25
+      - HISTOGRAM_RATIO_COEFFICIENT=1
       - URL_FOR_SENTTOVEC_MODEL=https://freefly19.ams3.digitaloceanspaces.com/smafed/torontobooks_unigrams.bin
       - URL_FOR_SPELLCHECKER_MODEL=https://freefly19.ams3.digitaloceanspaces.com/smafed/en.bin
     depends_on:
       - event-detector-mongo
     volumes:
-      - ./data_smafecd:/app/data_smafed
+      - ./data_smafed:/app/data_smafed
     networks:
       - event-detection-net
 

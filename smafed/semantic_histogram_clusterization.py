@@ -15,17 +15,20 @@ class SemanticHistogramClusterization:
     Class for semantic histogram clustering.
     """
 
-    def __init__(self, folder_with_clusters, shr_min=0.9, shr_threshold=0.25):
+    def __init__(self, folder_with_clusters, shr_min=0.9, shr_threshold=0.25, histogram_ratio_coefficient=100):
         """
         :param folder_with_clusters:folder where clusters are stored or would be stored
         :param shr_min: minimum semantic histogram ratio
         :param shr_threshold: similarity threshold
+        :param histogram_ratio_coefficient: coefficient which would be used in calculating delta
 
         Load data if it exist.
         """
         self.shr_min = shr_min
         self.shr_threshold = shr_threshold
+        self.histogram_ratio_coefficient = histogram_ratio_coefficient
         self.folder_with_clusters = folder_with_clusters
+        self.histogram_ratio_coefficient = histogram_ratio_coefficient
         if os.path.exists(folder_with_clusters):
             self.clusters, self.clusters_creating_time = load_clusters(self.folder_with_clusters)
         else:
@@ -73,7 +76,7 @@ class SemanticHistogramClusterization:
 
         Check condition for adding element in existing cluster.
         """
-        delta = SemanticHistogramClusterization.calc_delta(shr_old, shr_new)
+        delta = self.calc_delta(shr_old, shr_new)
 
         cond_graded = shr_old <= shr_new
         cond_shr_min = shr_new > self.shr_min
@@ -83,15 +86,14 @@ class SemanticHistogramClusterization:
             cond_delta = True
         return cond_graded or (cond_shr_min and cond_delta)
 
-    @staticmethod
-    def calc_delta(shr_old, shr_new):
+    def calc_delta(self, shr_old, shr_new):
         """
         :param shr_old: semantic histogram ratio old.
         :param shr_new: semantic histogram ratio new.
 
         Calculate delta.
         """
-        delta = np.abs((shr_old - shr_new) / shr_old) * 100
+        delta = np.abs((shr_old - shr_new) / shr_old) * self.histogram_ratio_coefficient
         return delta
 
     def make_new_cluster(self, element):
