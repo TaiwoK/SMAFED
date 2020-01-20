@@ -24,6 +24,7 @@ docker-compose -f docker-compose-prod.yml up -d
       - NUM_OF_TOKENS
       - SHR_MIN
       - SHR_THRESHOLD
+      - HISTOGRAM_RATIO_COEFFICIENT
 ##### To edit ```docker-compose-prod.yml``` file you can use ubuntu nano editor in the next way:
 ```
 docker-compose -f docker-compose-prod.yml down
