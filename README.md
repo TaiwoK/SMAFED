@@ -64,7 +64,7 @@ exit
 ```
 ##### Import a new one:
 ```
-mongoimport --db event_detection_db --collection IKB <NEW_IKB_filename> --jsonArray
+mongoimport --db event_detection_db --collection IKB <NEW_IKB_filename>
 exit
 ```
 ##### Clean up old cluster`s staff:
