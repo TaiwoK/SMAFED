@@ -33,7 +33,7 @@ nano docker-compose-prod.yml
 ### After any changing in ```docker-compose-prod.yml``` or in the scripts you MUST run multi-container application with rebuilding:
 ```
 docker-compose -f docker-compose-prod.yml up -d --build
-docker rm $(docker ps -a -f status=exited -q)
+docker system prune -a
 ```
 ## To update or replace IKB database you need to do the following commands
 ##### Stop multi-container application and run only mongodb
@@ -64,7 +64,7 @@ exit
 ```
 ##### Import a new one:
 ```
-mongoimport --db event_detection_db --collection IKB <NEW_IKB_filename>
+mongoimport --db event_detection_db --collection IKB <NEW_IKB_filename> --jsonArray
 exit
 ```
 ##### Clean up old cluster`s staff:
