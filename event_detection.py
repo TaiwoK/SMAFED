@@ -125,4 +125,7 @@ while True:
         delete_clusters()
     except FileNotFoundError:
         pass
-    pipeline()
+    try:
+        pipeline()
+    except MemoryError:
+        pass
