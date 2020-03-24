@@ -4,6 +4,7 @@ import requests
 import requests_oauthlib
 
 from requests.exceptions import ChunkedEncodingError
+from time import sleep
 
 ACCESS_TOKEN = os.getenv("ACCESS_TOKEN", '1199269022447083521-dCaymemHHDkjdsH3OmFcEKAHB9ZB8f')
 ACCESS_SECRET = os.getenv("ACCESS_SECRET", 'riDYzKMcOQO7Pk4uKTEqMMfuv7XOTPzqNuoWdSZOSsA9j')
@@ -37,11 +38,21 @@ def send_tweets_to_spark(resp, tcp_connection):
 HOST_NAME = os.getenv("HOST_NAME", "localhost")
 PORT = int(os.getenv("PORT", '9009'))
 conn = None
-s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-s.bind((HOST_NAME, PORT))
-s.listen(1)
-print("Waiting for TCP connection...")
-conn, addr = s.accept()
-print("Connected... Starting getting tweets.")
-response = get_tweets()
-send_tweets_to_spark(response, conn)
+while True:
+    try:
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.bind((HOST_NAME, PORT))
+        s.listen(1)
+        print("Waiting for TCP connection...")
+        conn, addr = s.accept()
+        print("Connected... Starting getting tweets.")
+        response = get_tweets()
+        send_tweets_to_spark(response, conn)
+    except Exception as error:
+        print('Error!!!', error)
+    finally:
+        try:
+            s.close()
+            sleep(10)
+        except Exception:
+            pass
