@@ -39,7 +39,7 @@ docker system prune -a
 ##### Stop multi-container application and run only mongodb
 ```
 docker-compose -f docker-compose-prod.yml down
-docker run -p 27017:27017 --name mongo -v /root/event-detection-app/data/mongodb/db:/data/db -d mongo
+docker run -p 27017:27017 --name mongo -v /root/event-detection-app/data/mongodb/db:/data/db -d mongo --auth
 ```
 ##### Open another command line window and copy the new database file to the server
 ```
@@ -49,7 +49,7 @@ scp -i path/to/file/with/private/key /path/to/new/IKB/on/your/computer/<NEW_IKB_
 ```
 docker cp <NEW_IKB_filename> mongo:<NEW_IKB_filename>
 docker exec -it mongo bash
-mongo
+mongo --username admin --password ZgtnQKNUeSVhBLW3LBfU --authenticationDatabase admin
 ```
 #### Then you can choose how to delete the database.
 ##### 1. Fully remove old database(all information about old clusters, tweets and slang words):
@@ -64,7 +64,7 @@ exit
 ```
 ##### Import a new one:
 ```
-mongoimport --db event_detection_db --collection IKB <NEW_IKB_filename> --jsonArray
+mongoimport --db event_detection_db --collection IKB <NEW_IKB_filename> --username admin --password ZgtnQKNUeSVhBLW3LBfU --authenticationDatabase admin
 exit
 ```
 ##### Clean up old cluster`s staff:
@@ -79,7 +79,7 @@ exit
 ```
 ##### Import a new one:
 ```
-mongoimport --db event_detection_db --collection IKB <NEW_IKB filename>
+mongoimport --db event_detection_db --collection IKB <NEW_IKB_filename> --username admin --password ZgtnQKNUeSVhBLW3LBfU --authenticationDatabase admin
 exit
 ```
 #### In both cases in the end you have to stop mongodb and run multi-container application:
@@ -92,12 +92,12 @@ docker-compose -f docker-compose-prod.yml up -d
 ##### Stop multi-container application and run only mongodb
 ```
 docker-compose -f docker-compose-prod.yml down
-docker run -p 27017:27017 --name mongo -v /root/event-detection-app/data/mongodb/db:/data/db -d mongo
+docker run -p 27017:27017 --name mongo -v /root/event-detection-app/data/mongodb/db:/data/db -d mongo --auth
 ```
 ##### Enter the Mongo shell inside the docker container:
 ```
 docker exec -it mongo bash
-mongo
+mongo --username admin --password ZgtnQKNUeSVhBLW3LBfU --authenticationDatabase admin
 ```
 ##### Fully remove old database(all information about old clusters, tweets and slang words):
 ```

@@ -13,7 +13,9 @@ HOST_NAME_TWITTER = os.getenv("HOST_NAME_TWITTER", "localhost")
 HOST_NAME_DATABASE = os.getenv("HOST_NAME_DATABASE", "localhost")
 DATABASE_NAME = os.getenv("DATABASE_NAME", "event_detection_db")
 INPUT_TWEETS_COLLECTION_NAME = os.getenv("INPUT_TWEETS_COLLECTION_NAME", "tweets_input")
-
+DATABASE_PASSWORD = os.getenv('DATABASE_PASSWORD', 'admin')
+DATABASE_USER= os.getenv('DATABASE_USER', 'admin')
+DATABASE_AUTHDB= os.getenv('DATABASE_AUTHDB', 'admin')
 
 def filter_tweets(tweet):
     """
@@ -58,17 +60,25 @@ def change_columns(tweet):
 
 
 def process_rdd(rdd, host=HOST_NAME_DATABASE, port=DATABASE_PORT, db=DATABASE_NAME,
-                collection=INPUT_TWEETS_COLLECTION_NAME):
+                collection=INPUT_TWEETS_COLLECTION_NAME, user=DATABASE_USER, password=DATABASE_PASSWORD,
+                auth_db=DATABASE_AUTHDB):
     """
     :param rdd: rdd object which contain json string from Twitter API.
     :param host: mongodb host.
     :param port: mongodb port.
     :param db: database name..
     :param collection: collection name.
+    :param user: user for authentication.
+    :param password: password for authentication.
+    :param auth_db: database for authentication.
 
     Process single partition of rdd and save into database.
     """
-    connection = MongoClient(host, port)
+    connection = MongoClient(host, port,
+                             username=user,
+                             password=password,
+                             authSource=auth_db,
+                             authMechanism='SCRAM-SHA-256')
     try:
         for line in rdd:
             tweet = json.loads(line)
@@ -79,7 +89,11 @@ def process_rdd(rdd, host=HOST_NAME_DATABASE, port=DATABASE_PORT, db=DATABASE_NA
         pass
 
 
-connection = MongoClient(HOST_NAME_DATABASE, DATABASE_PORT)
+connection = MongoClient(HOST_NAME_DATABASE, DATABASE_PORT,
+                         username=DATABASE_USER,
+                         password=DATABASE_PASSWORD,
+                         authSource=DATABASE_AUTHDB,
+                         authMechanism='SCRAM-SHA-256')
 if DATABASE_NAME not in connection.list_database_names():
     mongo_init(connection)
 

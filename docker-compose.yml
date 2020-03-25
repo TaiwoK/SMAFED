@@ -20,7 +20,13 @@ services:
   event-detector-mongo:
     container_name: event-detector-mongo
     image: mongo
+    environment:
+      - MONGO_INITDB_ROOT_PASSWORD=ZgtnQKNUeSVhBLW3LBfU
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_DATABASE=admin
     restart: always
+    ports:
+      - "27017:27017"
     volumes:
       - ./data/mongodb/db:/data/db
     networks:
@@ -34,6 +40,9 @@ services:
       - MONGO_HOST=event-detector-mongo
       - MONGO_PORT=27017
       - MONGO_DATABASE=event_detection_db
+      - MONGO_PASSWORD=ZgtnQKNUeSVhBLW3LBfU
+      - MONGO_USER=admin
+      - MONGO_AUTHDB=admin
     ports:
       - "5001:80"
     depends_on:
@@ -72,6 +81,9 @@ services:
       - PROCESSED_TWEET_COLLECTION_NAME=tweets_processed
       - CLUSTER_COLLECTION_NAME=cluster
       - USED_SLANG_COLLECTION_NAME=used_slang
+      - DATABASE_PASSWORD=ZgtnQKNUeSVhBLW3LBfU
+      - DATABASE_USER=admin
+      - DATABASE_AUTHDB=admin
     depends_on:
       - event-detector-twitter
       - event-detector-mongo
@@ -83,6 +95,9 @@ services:
     container_name: event-detector-app
     restart: always
     environment:
+      - DATABASE_PASSWORD=ZgtnQKNUeSVhBLW3LBfU
+      - DATABASE_USER=admin
+      - DATABASE_AUTHDB=admin
       - DATABASE_NAME=event_detection_db
       - DATABASE_HOST=event-detector-mongo
       - DATABASE_PORT=27017

@@ -28,6 +28,9 @@ nltk.download('averaged_perceptron_tagger')
 DATABASE_NAME = os.getenv("DATABASE_NAME", "event_detection_db")
 DATABASE_HOST = os.getenv("DATABASE_HOST", "localhost")
 DATABASE_PORT = int(os.getenv("DATABASE_PORT", '27017'))
+DATABASE_PASSWORD = os.getenv('DATABASE_PASSWORD', 'admin')
+DATABASE_USER= os.getenv('DATABASE_USER', 'admin')
+DATABASE_AUTHDB= os.getenv('DATABASE_AUTHDB', 'admin')
 
 INPUT_TWEETS_COLLECTION_NAME = os.getenv("INPUT_TWEETS_COLLECTION_NAME", "tweets_input")
 IKB_COLLECTION_NAME = os.getenv("IKB_COLLECTION_NAME", "IKB")
@@ -61,7 +64,7 @@ def download_models(url, path):
 
 
 def pipeline():
-    dbworker = MongoDBWorker(DATABASE_NAME, DATABASE_HOST, DATABASE_PORT)
+    dbworker = MongoDBWorker(DATABASE_NAME, DATABASE_HOST, DATABASE_PORT, DATABASE_USER, DATABASE_PASSWORD, DATABASE_AUTHDB)
     start_common = time.time()
     tweets_df = load_data_from_db(dbworker, INPUT_TWEETS_COLLECTION_NAME)
     if tweets_df.shape[0]:

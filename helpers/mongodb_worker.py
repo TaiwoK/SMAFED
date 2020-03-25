@@ -6,13 +6,20 @@ class MongoDBWorker:
     Wrapper over mongo database
     """
 
-    def __init__(self, database, host="localhost", port=27017):
+    def __init__(self, database, host="localhost", port=27017, user="", password="", auth_db=""):
         """
         :param database: name of the database which will be used
         :param host: host on which mongo db is
         :param port: port to which connect with mongo db
+        :param user: user for authentication.
+        :param password: password for authentication.
+        :param auth_db: database for authentication.
         """
-        self.client = pymongo.MongoClient(host, port)
+        self.client = pymongo.MongoClient(host, port,
+                                          username=user,
+                                          password=password,
+                                          authSource=auth_db,
+                                          authMechanism='SCRAM-SHA-256')
         self.database = self.client[database]
 
     def insert(self, collection, document):
