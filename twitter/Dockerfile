@@ -1,5 +1,7 @@
 FROM python:3.7-alpine
 
+EXPOSE 9009
+
 WORKDIR /app
 
 COPY ./twitter_app.py /app

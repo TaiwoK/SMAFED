@@ -12,8 +12,6 @@ services:
       - CONSUMER_SECRET=IgX0Sg7h2Jq5FBN257D74kYAP2UoWDi5pm49x3Oh0hpL3HmkHx
       - PORT=9009
       - HOST_NAME=event-detector-twitter
-    ports:
-      - 9009
     networks:
       - event-detection-net
 
@@ -43,8 +41,6 @@ services:
       - MONGO_PASSWORD=ZgtnQKNUeSVhBLW3LBfU
       - MONGO_USER=admin
       - MONGO_AUTHDB=admin
-    ports:
-      - "5001:80"
     depends_on:
       - event-detector-mongo
     networks:
