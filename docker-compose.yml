@@ -29,6 +29,7 @@ services:
       - ./data/mongodb/db:/data/db
     networks:
       - event-detection-net
+    command: --quiet
 
   event-detector-rest-api:
     build: rest-api/
