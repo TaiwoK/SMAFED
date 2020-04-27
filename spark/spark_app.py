@@ -97,26 +97,30 @@ connection = MongoClient(HOST_NAME_DATABASE, DATABASE_PORT,
 if DATABASE_NAME not in connection.list_database_names():
     mongo_init(connection)
 
-# create spark configuration
-my_spark = SparkSession \
-    .builder \
-    .appName("TwitterStreamApp") \
-    .getOrCreate()
+while True:
+    try:
+        # create spark configuration
+        my_spark = SparkSession \
+            .builder \
+            .appName("TwitterStreamApp") \
+            .getOrCreate()
 
-my_spark.conf.set('spark.executor.pyspark.memory', '0.5g')
+        my_spark.conf.set('spark.executor.pyspark.memory', '0.5g')
 
-# create spark context with the above configuration
-sc = my_spark.sparkContext
-sc.setLogLevel("ERROR")
-# create the Streaming Context from the above spark context with interval size 2 seconds
-ssc = StreamingContext(sc, 15)
-# setting a checkpoint to allow RDD recovery
-ssc.checkpoint("checkpoint_TwitterStreamApp")
-# read data from port 9009
-dataStream = ssc.socketTextStream(HOST_NAME_TWITTER, TWITTER_PORT)
-# do processing for each RDD generated in each interval
-dataStream.foreachRDD(lambda rdd: rdd.foreachPartition(process_rdd))
-# start the streaming computation
-ssc.start()
-# wait for the streaming to finish
-ssc.awaitTermination()
+        # create spark context with the above configuration
+        sc = my_spark.sparkContext
+        sc.setLogLevel("ERROR")
+        # create the Streaming Context from the above spark context with interval size 2 seconds
+        ssc = StreamingContext(sc, 15)
+        # setting a checkpoint to allow RDD recovery
+        ssc.checkpoint("checkpoint_TwitterStreamApp")
+        # read data from port 9009
+        dataStream = ssc.socketTextStream(HOST_NAME_TWITTER, TWITTER_PORT)
+        # do processing for each RDD generated in each interval
+        dataStream.foreachRDD(lambda rdd: rdd.foreachPartition(process_rdd))
+        # start the streaming computation
+        ssc.start()
+        # wait for the streaming to finish
+        ssc.awaitTermination()
+    except Exception as error:
+        print('Error!!!', error)
