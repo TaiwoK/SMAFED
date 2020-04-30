@@ -120,7 +120,7 @@ while True:
         dataStream.foreachRDD(lambda rdd: rdd.foreachPartition(process_rdd))
         # start the streaming computation
         ssc.start()
-        # wait for the streaming to finish
-        ssc.awaitTermination()
     except Exception as error:
         print('Error!!!', error)
+# wait for the streaming to finish
+ssc.awaitTermination()
