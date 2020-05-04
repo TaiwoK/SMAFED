@@ -106,12 +106,13 @@ while True:
             .getOrCreate()
 
         my_spark.conf.set('spark.executor.pyspark.memory', '0.5g')
+        my_spark.conf.set('spark.driver.memory', '0.5g')
 
         # create spark context with the above configuration
         sc = my_spark.sparkContext
         sc.setLogLevel("ERROR")
         # create the Streaming Context from the above spark context with interval size 2 seconds
-        ssc = StreamingContext(sc, 15)
+        ssc = StreamingContext(sc, 5)
         # setting a checkpoint to allow RDD recovery
         ssc.checkpoint("checkpoint_TwitterStreamApp")
         # read data from port 9009
@@ -120,7 +121,13 @@ while True:
         dataStream.foreachRDD(lambda rdd: rdd.foreachPartition(process_rdd))
         # start the streaming computation
         ssc.start()
+        # wait for the streaming to finish
+        ssc.awaitTermination()
     except Exception as error:
         print('Error!!!', error)
-# wait for the streaming to finish
-ssc.awaitTermination()
+    finally:
+        try:
+            print("Stopping")
+            ssc.stop()
+        except Exception:
+            pass
