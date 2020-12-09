@@ -1,6 +1,7 @@
 # Enter the server with ssh command:
 ```
-ssh -i path/to/file/with/private/key root@smafed.com   #(Reference: downloads)
+# (Reference: cd ~/Downloads)
+ssh -i path/to/file/with/private/key root@smafed.com   
 ```
 ## Go to the folder with application:
 ```
